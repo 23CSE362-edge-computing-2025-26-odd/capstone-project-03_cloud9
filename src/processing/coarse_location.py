@@ -153,6 +153,7 @@ def simulation():
 
         plot_all(material_locations, tag_pos, coarse_zone)
 
+
     else:
         print(f"Material ID '{material_id}' not found!")
 
