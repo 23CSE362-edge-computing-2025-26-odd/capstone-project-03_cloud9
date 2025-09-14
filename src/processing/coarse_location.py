@@ -62,30 +62,38 @@ def fingerprint_dataset(step):
             dataset.append({"pos": (x, y), "rssi": rssi_vector})
     return dataset
 
+
 dataset_ = fingerprint_dataset(step=1)
 
 from sklearn.neighbors import NearestNeighbors
 X = np.array([entry["rssi"] for entry in dataset_])
 y = np.array([entry["pos"] for entry in dataset_])
 
+
 knn = NearestNeighbors(n_neighbors=7, metric='euclidean')
 knn.fit(X,y)
+
 
 def cloud_computation(tag_position): 
     print("Computing the exact location....waiting for cloud response...")
     
+
     tag_rssi = list(get_rssi(tag_position, add_noise=False).values()) # curr rssi values
+
     tag_rssi = np.array(tag_rssi).reshape(1, -1)
 
     distances, position = knn.kneighbors(tag_rssi) # nearest neighbors
 
     neighbor_positions = y[position[0]]
 
+
     print(f"\nDistances to nearest neighbors:", np.round(distances[0], 2))
+
     print(f"\nNeighbor positions:", neighbor_positions)
 
     weights = 1 / (distances[0] + 1e-5)  
     refined_location = np.average(neighbor_positions, axis=0, weights=weights)
+
 
     return refined_location
 
@@ -148,7 +156,9 @@ def simulation():
             refined_zone = None
             print("Skipping Cloud computation.")
 
+
         plot_all(material_locations, tag_pos, coarse_zone,refined_zone)
+
 
         m_input = input("\nHas the material picked up? (yes/no): ").strip().lower()
         if m_input == 'yes':
@@ -157,6 +167,7 @@ def simulation():
         
         else:
             print(f"Material is not picked up. It's still in list.")
+
 
     else:
         print(f"Material ID '{material_id}' not found!")
