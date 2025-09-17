@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 
-
 edge_gateways = {
     'Zone A': [0, 0],
     'Zone B': [100, 0],
@@ -62,6 +61,7 @@ def fingerprint_dataset(step):
             dataset.append({"pos": (x, y), "rssi": rssi_vector})
     return dataset
 
+
 dataset_ = fingerprint_dataset(step=1)
 
 from sklearn.neighbors import NearestNeighbors
@@ -70,6 +70,7 @@ y = np.array([entry["pos"] for entry in dataset_])
 
 knn = NearestNeighbors(n_neighbors=7, metric='euclidean')
 knn.fit(X,y)
+
 
 def cloud_computation(tag_position): 
     print("Computing the exact location....waiting for cloud response...")
@@ -89,6 +90,7 @@ def cloud_computation(tag_position):
 
     return refined_location
 
+  
 def plot_all(material_positions, selected_tag_pos, coarse_zone,refined_location=None): # plotting all values in graph
     plt.figure(figsize=(10, 10))
     
@@ -111,7 +113,6 @@ def plot_all(material_positions, selected_tag_pos, coarse_zone,refined_location=
     plt.scatter(selected_tag_pos[0], selected_tag_pos[1], c='red', marker='x', s=150)
 
     if refined_location is not None:
-        print(f"Plotting Refined Location: {refined_location}")
         plt.scatter(refined_location[0], refined_location[1], c='olive', marker='X', s=200)
     
     plt.grid(True)
@@ -138,7 +139,7 @@ def simulation():
 
         print(f"\nMax RSSI: {max_rssi:.2f} dBm\n")
         print(f"Coarse Location Zone: {coarse_zone}")
-
+        
         # for cloud
         c_input = input("\nDo you want to compute the exact location via Cloud? (yes/no): ").strip().lower()
         if c_input == 'yes':
@@ -149,6 +150,7 @@ def simulation():
             print("Skipping Cloud computation.")
 
         plot_all(material_locations, tag_pos, coarse_zone,refined_zone)
+
 
         m_input = input("\nHas the material picked up? (yes/no): ").strip().lower()
         if m_input == 'yes':
@@ -162,4 +164,6 @@ def simulation():
         print(f"Material ID '{material_id}' not found!")
 
 
+
 simulation() 
+
